@@ -49,6 +49,18 @@ int Point::GetBucket() const noexcept {
 	return value;
 }
 
+int Point::Red() const noexcept {
+	return red;
+}
+
+int Point::Green() const noexcept {
+	return green;
+}
+
+int Point::Blue() const noexcept {
+	return blue;
+}
+
 void Point::SetBucket(size_t index) noexcept {
 	value = static_cast<int>(index);
 	return;

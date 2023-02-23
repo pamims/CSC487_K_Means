@@ -1,52 +1,89 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
-//#include <algorithm>
 
 #include "cluster_algorithm.h"
 #include "test.h"
 #include "timer.h"
 #include "mapper.h"
+#include "image_converter.h"
+#include "CImg.h"
+
+// because I'm lazy
+#include <string>
 
 
-// tests
-void random_colors_test(int k, int width, int height);
+// speed tests
+void   core_algorithm_speed_test();
+double get_controlled_test_result(const size_t k, const size_t width, const size_t height);
 
 
-
+// -- MAIN -- //
 int main(int argc, char** argv) {
-	random_colors_test(3, 10, 10);
+	if (argc < 2) {
+		std::cout << "No image supplied" << std::endl;
+		return 0;
+	}
+
+	std::string filename = argv[1];
+	cimg_library::CImg<int> image(filename.c_str());
+	const size_t width = image.width();
+	const size_t height = image.height();
+	std::cout << width << " : " << height << std::endl;
+	
+	auto data = ImageConverter::BuildData(image);
+	KMeans algorithm;
+	auto result = algorithm.Process(10, data);
+	data = Mapper::GetMappedData(result);
+
+	auto new_image = ImageConverter::BuildImage(data, width, height);
+	filename += ".result.bmp";
+	new_image.save_bmp(filename.c_str());
 
 	return 0;
 }
+// ---------- //
 
 
-
-void random_colors_test(const int k, const int width, const int height) {
+// speed test definitions
+double get_controlled_test_result(const size_t k, const size_t width, const size_t height) {
 	test::Timer timer;
 
-	std::cout << "Building data set..." << std::endl;
-	std::vector<Point> data = test::make_clustered_data_set(k, width, height);
-	//std::vector<Point> data = test::make_randomized_data_set(width, height);
-	//std::vector<Point> data = test::make_white_data_set(width, height);
-	std::cout << "Dataset complete." << std::endl;
-
-	std::cout << "Running k-means on randomized image." << std::endl;
-	std::cout << "width  = " << width  << std::endl;
-	std::cout << "height = " << height << std::endl;
-
-	KMeans algo;
 	timer.Set();
-	auto result = algo.Process(k, data);
-	auto delta_time = timer.Peek();
+	std::vector<Point> data = test::make_control_data_set(width, height);
+	double build_time = timer.Peek();
+
+	KMeans algorithm;
+
+	timer.Set();
+	auto result = algorithm.Process(k, data);
+	double process_time = timer.Peek();
 	std::vector<Centroid> centroids = result.second;
-	
-	std::cout << "Processing complete." << std::endl;
-	std::cout << "Results: " << std::endl;
-	test::print_centroids(centroids);
-	std::cout << "Elapsed time: " << delta_time << " seconds.";
 
-	std::vector<Point> mapped_points = Mapper::GetMappedData(result);
-	test::print_data_set(mapped_points);
+	std::cout << "Elapsed time: " << process_time << " seconds." << std::endl;
 
-	return;
+	return process_time;
+}
+
+void core_algorithm_speed_test() {
+	std::ofstream out_file;
+
+	std::cout << "Opening test_results.txt" << std::endl;
+	out_file.open("test_results.txt");
+	if (!out_file.is_open()) {
+		std::cout << "Problem opening output file." << std::endl;
+		return;
+	}
+
+	test::Timer timer;
+	timer.Set();
+	for (int i = 0; i < 1000; i++) {
+		std::cout << "Begin test runs and collect results: " << i + 1 << "/" << 1000 << " : " << timer.Peek() << " seconds elapsed." << std::endl;
+		double result = get_controlled_test_result(255, 500, 500);
+		out_file << result << std::endl;
+	}
+
+	out_file.close();
+
+	std::cout << "Data collection is complete.";
 }

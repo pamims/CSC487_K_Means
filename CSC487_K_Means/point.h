@@ -8,7 +8,10 @@ class base_point {
 private:
 	int  Hash() const noexcept;
 protected:
-	int red, green, blue, value;
+	int red;
+	int green;
+	int blue;
+	int value;
 	base_point(int red, int green, int blue, int value) noexcept :
 		red(red), green(green), blue(blue), value(value) {};
 public:
@@ -27,6 +30,9 @@ class Point final : public base_point {
 public:
 	Point(int red, int green, int blue) noexcept;
 	int  GetBucket() const noexcept;
+	int  Red() const noexcept;
+	int  Green() const noexcept;
+	int  Blue() const noexcept;
 	void SetBucket(size_t index) noexcept;
 	void SetToCentroid(const Centroid& other) noexcept;
 public:

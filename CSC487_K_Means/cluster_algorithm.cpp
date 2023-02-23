@@ -3,6 +3,7 @@
 //#include <iostream>
 #include <algorithm>
 #include <execution>
+#include <mutex>
 #include "project_constants.h"
 
 #include <random>
@@ -32,6 +33,7 @@ KMeans::Process(const size_t _k, std::vector<Point> data) const {
 	auto unique_data = GetUniqueData(data);
 	auto centroids = GetCentroids(temp_k, unique_data);
 	const size_t k = centroids.size();
+	//std::mutex centroids_mutex;
 
 	unsigned int iterations = 0;
 	do {
@@ -50,9 +52,12 @@ KMeans::Process(const size_t _k, std::vector<Point> data) const {
 		auto zero_centroids = [](Centroid& centroid) {
 			centroid.Zero();
 		};
-		auto sum_up_values = [&centroids](const Point& point) { // not thread safe
+		// Mutex collisions too high experimentally.
+		auto sum_up_values = [&centroids/*, &centroids_mutex*/](const Point& point) { // not thread safe
 			int index = point.GetBucket();
+			//centroids_mutex.lock();
 			centroids[index].AddPoint(point);
+			//centroids_mutex.unlock();
 		};
 		auto set_centroid_values = [](Centroid& centroid) {
 			centroid.SetToAveragePointValue();

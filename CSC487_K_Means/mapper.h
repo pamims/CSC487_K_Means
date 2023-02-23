@@ -12,7 +12,6 @@ class Mapper {
 private:
 	Mapper();
 public:
-	std::pair<int, int> a;
 	static std::vector<Point> GetMappedData(const std::pair<std::vector<Point>, std::vector<Centroid>>& input);
 };
 
