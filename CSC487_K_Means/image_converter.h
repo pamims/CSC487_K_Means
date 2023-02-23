@@ -14,7 +14,7 @@ private:
 	ImageConverter();
 public:
 	static std::vector<Point> BuildData(const cimg_library::CImg<int>& image);
-	static cimg_library::CImg<int> BuildImage(const std::vector<Point>& data, size_t width, size_t height);
+	static cimg_library::CImg<int> BuildImage(const std::vector<Point>& data, const unsigned int width, const unsigned int height);
 };
 
 #endif

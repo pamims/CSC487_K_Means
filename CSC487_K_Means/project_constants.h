@@ -15,5 +15,14 @@ constexpr size_t one_byte = sizeof(uint8_t);
 constexpr size_t two_bytes = 2 * one_byte;
 constexpr size_t three_bytes = 3 * one_byte;
 
+const unsigned int flat_2D_z_value = 0;
+const unsigned int cimg_red_index = 0;
+const unsigned int cimg_green_index = 1;
+const unsigned int cimg_blue_index = 2;
+
+const unsigned int flat_2d_image_depth = 1;
+const unsigned int num_color_channels = 3;
+const int cimg_black_pixel_value = 0;
+
 
 #endif

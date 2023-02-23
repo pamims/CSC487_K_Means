@@ -2,15 +2,23 @@
 #include <fstream>
 #include <vector>
 
+#define cimg_use_jpeg
+#define cimg_use_png
+#include "CImg.h"
+
 #include "cluster_algorithm.h"
 #include "test.h"
 #include "timer.h"
 #include "mapper.h"
 #include "image_converter.h"
-#include "CImg.h"
+#include "project_constants.h"
 
 // because I'm lazy
 #include <string>
+
+constexpr size_t hardcoded_k = 255;
+static_assert(hardcoded_k <= default_max_k);
+static_assert(hardcoded_k >= default_min_k);
 
 
 // speed tests
@@ -24,16 +32,16 @@ int main(int argc, char** argv) {
 		std::cout << "No image supplied" << std::endl;
 		return 0;
 	}
-
+	std::cout << "working" << std::endl;
 	std::string filename = argv[1];
 	cimg_library::CImg<int> image(filename.c_str());
-	const size_t width = image.width();
-	const size_t height = image.height();
+	const unsigned int width = image.width();
+	const unsigned int height = image.height();
 	std::cout << width << " : " << height << std::endl;
 	
 	auto data = ImageConverter::BuildData(image);
 	KMeans algorithm;
-	auto result = algorithm.Process(10, data);
+	auto result = algorithm.Process(hardcoded_k, data);
 	data = Mapper::GetMappedData(result);
 
 	auto new_image = ImageConverter::BuildImage(data, width, height);
@@ -86,4 +94,5 @@ void core_algorithm_speed_test() {
 	out_file.close();
 
 	std::cout << "Data collection is complete.";
+	return;
 }

@@ -118,7 +118,7 @@ namespace test {
 		std::cout << "------" << std::endl;
 	}
 
-	void print_elapsed_time(const double& delta_time) {
+	void print_elapsed_time(double delta_time) {
 		std::cout << "Elapsed time: " << delta_time << "seconds." << std::endl;
 	}
 }

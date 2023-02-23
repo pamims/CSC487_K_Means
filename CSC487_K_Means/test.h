@@ -13,7 +13,7 @@ namespace test {
 	std::vector<Point> make_control_data_set(size_t width, size_t height);
 	void print_data_set(const std::vector<Point>& data);
 	void print_centroids(const std::vector<Centroid>& centroids);
-	void print_elapsed_time(const double& delta_time);
+	void print_elapsed_time(double delta_time);
 }
 
 #endif

@@ -1,14 +1,7 @@
 #include "image_converter.h"
+#include "project_constants.h"
 
 
-const unsigned int z = 0;
-const unsigned int red_index = 0;
-const unsigned int green_index = 1;
-const unsigned int blue_index = 2;
-
-const size_t depth = 1;
-const size_t color_channels = 3;
-const size_t black_pixel = 0;
 
 
 std::vector<Point> ImageConverter::BuildData(const cimg_library::CImg<int>& image) {
@@ -17,16 +10,16 @@ std::vector<Point> ImageConverter::BuildData(const cimg_library::CImg<int>& imag
 	if (image.is_empty() || image.is_inf() || image.is_nan()) {
 		return result;
 	}
-	const size_t width = static_cast<size_t>(image.width());
-	const size_t height = static_cast<size_t>(image.height());
-	const size_t size = width * height;
+	const unsigned int width = static_cast<unsigned int>(image.width());
+	const unsigned int height = static_cast<unsigned int>(image.height());
+	const unsigned int size = width * height;
 	result.reserve(size);
 
-	for (size_t y = 0; y < height; y++) {
-		for (size_t x = 0; x < width; x++) {
-			int red = image(x, y, z, red_index);
-			int green = image(x, y, z, green_index);
-			int blue = image(x, y, z, blue_index);
+	for (unsigned int y = 0; y < height; y++) {
+		for (unsigned int x = 0; x < width; x++) {
+			int red = image(x, y, flat_2D_z_value, cimg_red_index);
+			int green = image(x, y, flat_2D_z_value, cimg_green_index);
+			int blue = image(x, y, flat_2D_z_value, cimg_blue_index);
 
 			result.emplace_back(red, green, blue);
 		}
@@ -35,16 +28,16 @@ std::vector<Point> ImageConverter::BuildData(const cimg_library::CImg<int>& imag
 	return result;
 }
 
-cimg_library::CImg<int> ImageConverter::BuildImage(const std::vector<Point>& data, size_t width, size_t height) {
+cimg_library::CImg<int> ImageConverter::BuildImage(const std::vector<Point>& data, const unsigned int width, const unsigned int height) {
 
-	cimg_library::CImg<int> result(width, height, depth, color_channels, black_pixel);
+	cimg_library::CImg<int> result(width, height, flat_2d_image_depth, num_color_channels, cimg_black_pixel_value);
 
-	for (size_t y = 0; y < height; y++) {
-		for (size_t x = 0; x < width; x++) {
-			size_t index = x + width * y;
-			result(x, y, z, red_index) = data[index].Red();
-			result(x, y, z, green_index) = data[index].Green();
-			result(x, y, z, blue_index) = data[index].Blue();
+	for (unsigned int y = 0; y < height; y++) {
+		for (unsigned int x = 0; x < width; x++) {
+			unsigned int index = x + width * y;
+			result(x, y, flat_2D_z_value, cimg_red_index) = data[index].Red();
+			result(x, y, flat_2D_z_value, cimg_green_index) = data[index].Green();
+			result(x, y, flat_2D_z_value, cimg_blue_index) = data[index].Blue();
 		}
 	}
 
