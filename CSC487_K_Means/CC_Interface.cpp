@@ -77,6 +77,7 @@ std::unique_ptr<IClusterAlgorithm> GetAlgorithm(CC_AlgorithmType algorithm_type)
 	switch (algorithm_type) {
 	case CC_AlgorithmType::kMeansUnweighted:
 		algorithm = std::make_unique<KMeansUnweighted>();
+		break;
 	case CC_AlgorithmType::kMedians:	//not yet implemented
 		[[fallthrough]];
 	case CC_AlgorithmType::kpp:			//not yet implemented
