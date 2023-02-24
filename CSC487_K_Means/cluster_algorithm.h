@@ -9,8 +9,6 @@
 
 
 class IClusterAlgorithm {
-protected:
-	IClusterAlgorithm() {};
 public:
 	virtual std::pair<std::vector<Point>, std::vector<Centroid>>
 		Process(size_t k, std::vector<Point> data) const = 0;
@@ -24,6 +22,7 @@ protected:
 	std::vector<Point> GetUniqueData(const std::vector<Point>& data) const;
 	virtual std::vector<Centroid> GetCentroids(const size_t k, std::vector<Point>& unique_data) const;
 public:
+	KMeans() {};
 	std::pair<std::vector<Point>, std::vector<Centroid>>
 		Process(size_t k, std::vector<Point> data) const override;
 };

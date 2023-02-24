@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <random>
+#include <fstream>
+
+#include "timer.h"
+#include "cluster_algorithm.h"
 
 namespace test {
 	static std::mt19937 rand_gen(static_cast<int>(time(nullptr)));
@@ -120,5 +124,55 @@ namespace test {
 
 	void print_elapsed_time(double delta_time) {
 		std::cout << "Elapsed time: " << delta_time << "seconds." << std::endl;
+	}
+}
+
+
+
+namespace test {
+	namespace speed {
+		// speed test definitions
+		double get_controlled_test_result(const size_t k, const size_t width, const size_t height) {
+			test::Timer timer;
+
+			timer.Set();
+			std::vector<Point> data = test::make_control_data_set(width, height);
+			double build_time = timer.Peek();
+
+			KMeans algorithm;
+
+			timer.Set();
+			auto result = algorithm.Process(k, data);
+			double process_time = timer.Peek();
+			std::vector<Centroid> centroids = result.second;
+
+			std::cout << "Elapsed time: " << process_time << " seconds." << std::endl;
+
+			return process_time;
+		}
+
+		void core_algorithm_speed_test() {
+			std::ofstream out_file;
+
+			std::cout << "Opening test_results.txt" << std::endl;
+			out_file.open("test_results.txt");
+			if (!out_file.is_open()) {
+				std::cout << "Problem opening output file." << std::endl;
+				return;
+			}
+
+			test::Timer timer;
+			timer.Set();
+			for (int i = 0; i < 1000; i++) {
+				std::cout << "Begin test runs and collect results: " << i + 1 << "/" << 1000 << " : " << timer.Peek() << " seconds elapsed." << std::endl;
+				double result = get_controlled_test_result(255, 500, 500);
+				out_file << result << std::endl;
+			}
+
+			out_file.close();
+
+			std::cout << "Data collection is complete.";
+			return;
+		}
 	}
 }

@@ -25,4 +25,18 @@ const unsigned int num_color_channels = 3;
 const int cimg_black_pixel_value = 0;
 
 
+const float max_display_size = 500.0;
+
+enum CC_AlgorithmType {
+	kMeans,
+	kpp,
+	kMedians
+};
+
+enum CC_FileType {
+	bmp,
+	jpeg,
+	png
+};
+
 #endif

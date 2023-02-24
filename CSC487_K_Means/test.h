@@ -14,6 +14,11 @@ namespace test {
 	void print_data_set(const std::vector<Point>& data);
 	void print_centroids(const std::vector<Centroid>& centroids);
 	void print_elapsed_time(double delta_time);
+
+	namespace speed {
+		void   core_algorithm_speed_test();
+		double get_controlled_test_result(const size_t k, const size_t width, const size_t height);
+	}
 }
 
 #endif

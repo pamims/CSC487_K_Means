@@ -132,6 +132,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CC_Interface.cpp" />
     <ClCompile Include="cluster_algorithm.cpp" />
     <ClCompile Include="image_converter.cpp" />
     <ClCompile Include="main.cpp" />
@@ -141,6 +142,7 @@
     <ClCompile Include="timer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CC_Interface.h" />
     <ClInclude Include="CImg.h" />
     <ClInclude Include="cluster_algorithm.h" />
     <ClInclude Include="image_converter.h" />
