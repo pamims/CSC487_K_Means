@@ -28,7 +28,7 @@ void CC_Interface::Process(const char *filename, unsigned int k, CC_AlgorithmTyp
 
 	auto data = ImageConverter::BuildData(original_image);
 	auto result_pair = algorithm->Process(static_cast<size_t>(k), data);
-	auto result_data = Mapper::GetMappedData(result_pair);
+	auto result_data = DataMapper::BuildData(result_pair);
 
 	result_image = ImageConverter::BuildImage(result_data, width, height);
 
@@ -47,7 +47,7 @@ void CC_Interface::Close() {
 	result_display.assign();
 }
 
-void CC_Interface::Save(const char *filename, CC_FileType filetype) {
+void CC_Interface::Save(const char *filename, CC_FileType filetype) const {
 	
 	switch (filetype) {
 	case CC_FileType::bmp:
@@ -66,11 +66,17 @@ void CC_Interface::Save(const char *filename, CC_FileType filetype) {
 	return;
 }
 
+bool CC_Interface::CanSave() const noexcept {
+	return !result_image.is_empty();
+}
+
 
 std::unique_ptr<IClusterAlgorithm> GetAlgorithm(CC_AlgorithmType algorithm_type) {
 	std::unique_ptr<IClusterAlgorithm> algorithm;
 
 	switch (algorithm_type) {
+	case CC_AlgorithmType::kMeansUnweighted:
+		algorithm = std::make_unique<KMeansUnweighted>();
 	case CC_AlgorithmType::kMedians:	//not yet implemented
 		[[fallthrough]];
 	case CC_AlgorithmType::kpp:			//not yet implemented

@@ -18,7 +18,8 @@ public:
 	void Process(const char *filename, unsigned int k, CC_AlgorithmType algorithm_type);
 	void Display();
 	void Close();
-	void Save(const char *filename, CC_FileType filetype);
+	void Save(const char *filename, CC_FileType filetype) const;
+	bool CanSave() const noexcept;
 };
 
 #endif
