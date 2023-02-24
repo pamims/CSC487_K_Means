@@ -8,11 +8,11 @@
 
 
 
-class Mapper {
+class DataMapper {
 private:
-	Mapper();
+	DataMapper();
 public:
-	static std::vector<Point> GetMappedData(const std::pair<std::vector<Point>, std::vector<Centroid>>& input);
+	static std::vector<Point> BuildData(const std::pair<std::vector<Point>, std::vector<Centroid>>& input);
 };
 
 #endif

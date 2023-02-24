@@ -29,10 +29,10 @@ class Point final : public base_point {
 	friend class Centroid;
 public:
 	Point(int red, int green, int blue) noexcept;
-	int  GetBucket() const noexcept;
 	int  Red() const noexcept;
 	int  Green() const noexcept;
 	int  Blue() const noexcept;
+	int  GetBucket() const noexcept;
 	void SetBucket(size_t index) noexcept;
 	void SetToCentroid(const Centroid& other) noexcept;
 public:

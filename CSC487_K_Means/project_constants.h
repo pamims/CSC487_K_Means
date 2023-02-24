@@ -29,6 +29,7 @@ const float max_display_size = 500.0;
 
 enum CC_AlgorithmType {
 	kMeans,
+	kMeansUnweighted,
 	kpp,
 	kMedians
 };

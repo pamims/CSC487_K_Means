@@ -27,5 +27,13 @@ public:
 		Process(size_t k, std::vector<Point> data) const override;
 };
 
+
+
+
+class KMeansUnweighted : public KMeans {
+public:
+	std::pair<std::vector<Point>, std::vector<Centroid>>
+		Process(size_t k, std::vector<Point> data) const override;
+};
 #endif
 

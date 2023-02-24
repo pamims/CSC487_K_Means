@@ -4,7 +4,7 @@
 #include <execution>
 #include <cassert>
 
-std::vector<Point> Mapper::GetMappedData(const std::pair<std::vector<Point>, std::vector<Centroid>>& input) {
+std::vector<Point> DataMapper::BuildData(const std::pair<std::vector<Point>, std::vector<Centroid>>& input) {
 	std::vector<Point> result = input.first;
 	std::vector<Centroid> centroids = input.second;
 
