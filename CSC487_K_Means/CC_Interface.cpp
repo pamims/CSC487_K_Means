@@ -7,42 +7,40 @@
 #include "mapper.h"
 #include "project_constants.h"
 
-//remove later
-//#include <iostream>
-
 
 std::unique_ptr<IClusterAlgorithm> GetAlgorithm(CC_AlgorithmType algorithm_type);
 void DisplayImage(const unsigned int x, const unsigned int y, const cimg_library::CImg<int>& image, cimg_library::CImgDisplay& display, const char* title);
 
-void CC_Interface::Process(const char *filename, unsigned int k, CC_AlgorithmType algorithm_type) {
+void CC_Interface::ImageLoad(const char* filename) {
+	original_image = cimg_library::CImg<int>(filename);
+}
+
+void CC_Interface::Process(unsigned int k, CC_AlgorithmType algorithm_type) {
 
 	std::unique_ptr<IClusterAlgorithm> algorithm = GetAlgorithm(algorithm_type);
 	if (algorithm.get() == nullptr) {
 		return;
 	}
 
-	original_image = cimg_library::CImg<int>(filename);
-
-	const unsigned int width = original_image.width();
-	const unsigned int height = original_image.height();
-
 	auto data = ImageConverter::BuildData(original_image);
 	auto result_pair = algorithm->Process(static_cast<size_t>(k), data);
 	auto result_data = DataMapper::BuildData(result_pair);
 
+	const unsigned int width = static_cast<unsigned int>(original_image.width());
+	const unsigned int height = static_cast<unsigned int>(original_image.height());
 	result_image = ImageConverter::BuildImage(result_data, width, height);
 
 	return;
 }
 
 void CC_Interface::Display() {
-	DisplayImage(0, 0, original_image, original_display, "Original Image");
-	DisplayImage(0, 0, result_image, result_display, "Processed Image");
+	if (!original_image.is_empty())
+		DisplayImage(0, 0, original_image, original_display, "Original Image");
+	if (!result_image.is_empty())
+		DisplayImage(0, 0, result_image, result_display, "Processed Image");
 }
 
 void CC_Interface::Close() {
-	//original_display.close();
-	//result_display.close();
 	original_display.assign();
 	result_display.assign();
 }
@@ -66,6 +64,10 @@ void CC_Interface::Save(const char *filename, CC_FileType filetype) const {
 	return;
 }
 
+bool CC_Interface::InputIsValid() const noexcept {
+	return !(original_image.is_empty() || original_image.is_inf() || original_image.is_nan());
+}
+
 bool CC_Interface::CanSave() const noexcept {
 	return !result_image.is_empty();
 }
@@ -78,15 +80,16 @@ std::unique_ptr<IClusterAlgorithm> GetAlgorithm(CC_AlgorithmType algorithm_type)
 	case CC_AlgorithmType::kMeansUnweighted:
 		algorithm = std::make_unique<KMeansUnweighted>();
 		break;
-	case CC_AlgorithmType::kMedians:	//not yet implemented
-		[[fallthrough]];
-	case CC_AlgorithmType::kpp:			//not yet implemented
-		[[fallthrough]];
+	//case CC_AlgorithmType::kMedians:	//not yet implemented
+	//	[[fallthrough]];
+	//case CC_AlgorithmType::kpp:			//not yet implemented
+	//	[[fallthrough]];
 	case CC_AlgorithmType::kMeans:
 		algorithm = std::make_unique<KMeans>();
 		break;
 	default:
 		algorithm = std::make_unique<KMeans>();
+		break;
 	}
 
 	return algorithm;

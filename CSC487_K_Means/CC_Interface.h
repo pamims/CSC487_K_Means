@@ -8,6 +8,19 @@
 #include "project_constants.h"
 
 
+enum class CC_AlgorithmType {
+	kMeans,
+	kMeansUnweighted,
+	//kpp,
+	//kMedians
+};
+
+enum class CC_FileType {
+	bmp,
+	jpeg,
+	png
+};
+
 class CC_Interface {
 private:
 	cimg_library::CImg<int> original_image;
@@ -15,10 +28,12 @@ private:
 	cimg_library::CImgDisplay original_display;
 	cimg_library::CImgDisplay result_display;
 public:
-	void Process(const char *filename, unsigned int k, CC_AlgorithmType algorithm_type);
+	void ImageLoad(const char* filename);
+	void Process(unsigned int k, CC_AlgorithmType algorithm_type);
 	void Display();
 	void Close();
 	void Save(const char *filename, CC_FileType filetype) const;
+	bool InputIsValid() const noexcept;
 	bool CanSave() const noexcept;
 };
 
