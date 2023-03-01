@@ -58,9 +58,9 @@ void CC_Interface::Save(const char *filename, CC_FileType filetype) const {
 		result_image.save_png(filename);
 		return;
 	default:
+		result_image.save_bmp(filename);
 		return;
 	}
-
 	return;
 }
 
