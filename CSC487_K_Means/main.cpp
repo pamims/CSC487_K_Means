@@ -18,13 +18,20 @@ int main(int argc, char** argv) {
 	std::string filename = argv[1];
 	
 	CC_Interface cc_interface;
-	cc_interface.Process(filename.c_str(), hardcoded_k, CC_AlgorithmType::kMeansUnweighted);
+	cc_interface.ImageLoad(filename.c_str());
+	if (!cc_interface.InputIsValid()) {
+		return 1;
+	}
+	cc_interface.Process(hardcoded_k, CC_AlgorithmType::kMeansUnweighted);
 	cc_interface.Display();
 
 	std::cin.get();
 	cc_interface.Close();
 
 	filename += "01.jpeg";
+	if (!cc_interface.CanSave()) {
+		return 2;
+	}
 	cc_interface.Save(filename.c_str(), CC_FileType::jpeg);
 
 	return 0;
